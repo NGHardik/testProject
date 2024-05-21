@@ -32,8 +32,14 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+			        <groupId>org.springframework.boot</groupId>
+			        <artifactId>spring-boot-maven-plugin</artifactId>
+			        <version>1.4.2.RELEASE</version> <!-- using latest from maven central, feel free to use any specific -->
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+			        <artifactId>findbugs-maven-plugin</artifactId>
+			  	<version>3.0.4</version> <!-- using latest from maven central, feel free to use any specific -->
 			</plugin>
 		</plugins>
 		<finalName>testProject</finalName>
