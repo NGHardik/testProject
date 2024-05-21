@@ -11,11 +11,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: "${env.GIT_REPO}", branch: 'origin'
+                git url: "${env.GIT_REPO}", branch: 'master'
             }
         }
 
-        stage('Build and Test with MavenV_3.9.6') {
+        stage('Build and Test with Maven') {
             steps {
                 script {
                     withMaven(maven: 'MavenV_3.9.6') {
