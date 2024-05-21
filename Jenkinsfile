@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Build and Test with Maven') {
+        stage('Build and Test with MavenV_3.9.6') {
             steps {
                 script {
                     withMaven(maven: 'MavenV_3.9.6') {
