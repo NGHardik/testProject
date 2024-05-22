@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven 3.9.6'
-        jdk 'JDK 11'
-    }
     environment {
         MAVEN_HOME = tool name: 'MavenV_3.9.6', type: 'maven'
         GIT_REPO = 'https://github.com/NGHardik/testProject'
