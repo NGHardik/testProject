@@ -23,26 +23,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t nghardik/testProject .'
-                }
-            }
-        }
-
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    withCredentials([DOCKER_HUB_CREDENTIALS]) {
-                        sh "docker login -u nghardik -p ${DOCKER_HUB_CREDENTIALS}"
-                        sh "docker push nghardik/testProject"
-                    }
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 script {
@@ -53,10 +33,31 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t nghardik/testproject .'
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([DOCKER_HUB_CREDENTIALS]) {
+                        sh "docker login -u nghardik -p ${DOCKER_HUB_CREDENTIALS}"
+                        sh "docker push nghardik/testproject"
+                    }
+                }
+            }
+        }
+
+        
+
         stage('Run Docker Container on Jenkins Agent') {
             steps {
                 script {
-                    sh "docker run -d -p 4030:8088 nghardik/testProject"
+                    sh "docker run -d -p 4030:8088 nghardik/testproject"
                 }
             }
         }
