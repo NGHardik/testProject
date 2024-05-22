@@ -44,10 +44,10 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    withCredentials([DOCKER_HUB_CREDENTIALS]) {
-                        sh "docker login -u nghardik -p ${DOCKER_HUB_CREDENTIALS}"
-                        sh "docker push nghardik/testproject"
+                    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
+                        sh "docker login -u nghardik -p ${dockerhub}"
                     }
+                    sh "docker push nghardik/testproject"
                 }
             }
         }
