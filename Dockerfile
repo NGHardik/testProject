@@ -1,4 +1,4 @@
 FROM openjdk:8
 EXPOSE 7171
-ADD target/testProject.jar testProject.jar
-ENTRYPOINT ["java","-jar","/testProject.jar"]
+ADD target/testProject-0.0.1-SNAPSHOT.jar testProject-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","/testProject-0.0.1-SNAPSHOT.jar"]
