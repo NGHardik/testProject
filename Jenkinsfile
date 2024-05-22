@@ -1,39 +1,17 @@
 pipeline {
     agent any
-    environment {
-        MAVEN_HOME = tool name: 'MavenV_3.9.6', type: 'maven'
-        GIT_REPO = 'https://github.com/NGHardik/testProject'
-        SONAR_TOKEN = credentials('sonarqubeToken')
-        DOCKER_HUB_CREDENTIALS = credentials('docker')
+    tools {
+        maven 'maven_3_5_0'
     }
-
     stages {
-        stage('Checkout') {
+        stage('Build Maven') {
             steps {
-                git url: "${env.GIT_REPO}", branch: 'master'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/NGHardik/testProject']]])
+                sh 'mvn clean install'
             }
         }
 
-        stage('Build and Test with Maven') {
-            steps {
-                script {
-                    withMaven(maven: 'MavenV_3.9.6') {
-                        sh 'mvn clean install'
-                    }
-                }
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withMaven(maven: 'MavenV_3.9.6') {
-                        sh "mvn sonar:sonar -Dsonar.projectKey=your_project_key -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONAR_TOKEN}"
-                    }
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Build docker image') {
             steps {
                 script {
                     sh 'docker build -t nghardik/testproject .'
@@ -41,28 +19,37 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Push image to Hub') {
             steps {
                 script {
-                    withCredentials([DOCKER_HUB_CREDENTIALS]) {
-                        sh "docker login -u nghardik -p ${DOCKER_HUB_CREDENTIALS}"
-                        sh "docker push nghardik/testproject"
+                    withCredentials([string(credentialsId: 'docker', variable: 'docker')]) {
+                        sh 'docker login -u nghardik -p ${docker}'
                     }
+                    sh 'docker push nghardik/testproject'
                 }
             }
         }
 
-        
-
-        stage('Run Docker Container on Jenkins Agent') {
+        stage('SonarQube Analysis') {
             steps {
-                script {
-                    sh "docker run -d -p 4030:8088 nghardik/testproject"
+                withCredentials([string(credentialsId: 'sonarqubeToken', variable: 'SONAR_TOKEN')]) {
+                    sh "mvn sonar:sonar -Dsonar.projectKey=tasklast -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONAR_TOKEN}"
                 }
             }
         }
-    }
 
+       
+		
+		 stage('Run Docker container on Jenkins Agent') {
+             
+            steps {
+                sh "docker run -d -p 4030:8080 nghardik/testproject"
+ 
+            }
+        }
+		
+	
+    }
     post {
         success {
             echo 'Pipeline succeeded!'
