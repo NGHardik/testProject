@@ -37,10 +37,17 @@
 			        <version>1.4.2.RELEASE</version> <!-- using latest from maven central, feel free to use any specific -->
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-			        <artifactId>findbugs-maven-plugin</artifactId>
-			  	<version>3.0.4</version> <!-- using latest from maven central, feel free to use any specific -->
-			</plugin>
+			        <groupId>com.github.spotbugs</groupId>
+			        <artifactId>spotbugs-maven-plugin</artifactId>
+			        <version>4.2.3</version>
+			        <executions>
+			          <execution>
+			            <goals>
+			              <goal>check</goal>
+			            </goals>
+			          </execution>
+			        </executions>
+		      </plugin>
 		</plugins>
 		<finalName>testProject</finalName>
 	</build>
